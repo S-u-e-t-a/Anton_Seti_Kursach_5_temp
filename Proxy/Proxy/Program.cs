@@ -56,8 +56,9 @@ namespace ProxyEasyWithThreads
                     
                     // ищем хост и порт
                     Regex req = new Regex(@"Host: (((?<host>.+?):(?<port>\d+?))|(?<host>.+?))\s+", RegexOptions.Multiline | RegexOptions.IgnoreCase);
-                    Match match = req.Match(System.Text.Encoding.ASCII.GetString(httpRequest));
+                    Match match = req.Match(System.Text.Encoding.ASCII.GetString(httpRequest));                    
                     string host = match.Groups["host"].Value;
+                    
                     int port = 0;
                     // если порта нет, то используем 80 по умолчанию
                     if (!int.TryParse(match.Groups["port"].Value, out port)) { port = 80; }
@@ -67,7 +68,7 @@ namespace ProxyEasyWithThreads
 
                     // создаем точку доступа
                     IPEndPoint IPEndPoint = new IPEndPoint(IPHostEntry.AddressList[0], port);
-
+                    WriteLog("Запрос от: " + host + ":" + port);
                     // создаем сокет и передаем ему запрос
                     using (Socket Rerouting = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
                     {
